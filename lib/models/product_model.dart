@@ -7,6 +7,7 @@ class Product extends Equatable {
   final double price;
   final bool isRecommended;
   final bool isPopular;
+  final int quantity;
 
   const Product({
     required this.name,
@@ -15,6 +16,7 @@ class Product extends Equatable {
     required this.price,
     required this.isRecommended,
     required this.isPopular,
+    this.quantity = 1,
   });
 
   @override

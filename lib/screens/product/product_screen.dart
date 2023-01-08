@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_ecommerce_app/models/models.dart';
 
+import '../../blocs/cart/cart_bloc.dart';
 import '../../blocs/wishlist/wishlist_bloc.dart';
 import '../../widgets/widgets.dart';
 
@@ -88,7 +89,19 @@ class ProductScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  context.read<CartBloc>().add(
+                        CartAdd(
+                          cartItem: CartItem(
+                            productImageUrl: product.imageUrl,
+                            productPrice: product.price,
+                            productName: product.name,
+                            quantity: 1,
+                          ),
+                        ),
+                      );
+                  Navigator.pushNamed(context, '/cart');
+                },
                 child: Text(
                   'ADD TO CART',
                   style: Theme.of(context).textTheme.headline3,

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/cart/cart_bloc.dart';
 import '../blocs/wishlist/wishlist_bloc.dart';
 import '../models/models.dart';
 
@@ -87,14 +88,55 @@ class ProductCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.add_circle,
-                          color: Colors.white,
-                        ),
-                      ),
+                    BlocBuilder<CartBloc, CartState>(
+                      builder: (context, state) {
+                        if (state is CartLoading) {
+                          return const Expanded(
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        } else if (state is CartLoaded) {
+                          return Expanded(
+                            child: IconButton(
+                              onPressed: () {
+                                context.read<CartBloc>().add(
+                                      CartAdd(
+                                        cartItem: CartItem(
+                                          productImageUrl: product.imageUrl,
+                                          productPrice: product.price,
+                                          productName: product.name,
+                                          quantity: 1,
+                                        ),
+                                      ),
+                                    );
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                final snackbar = SnackBar(
+                                  content: Text(
+                                    '${product.name} added to cart',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline3
+                                        ?.copyWith(
+                                          color: Colors.white,
+                                        ),
+                                  ),
+                                  backgroundColor: Colors.black,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackbar);
+                              },
+                              icon: const Icon(
+                                Icons.add_circle,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
                     ),
                     isWishList
                         ? Expanded(
